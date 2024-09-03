@@ -8,3 +8,7 @@ ORDER BY TO_CHAR(a.appointment_starts_at, 'MM');
 SELECT avg(a.appointment_created_at - c.created_at) as "Promedio Tiempo Chat hasta Agendamiento"
 FROM Chats c, Appointments a
 WHERE c.chat_id = a.chat_id;
+
+
+SELECT avg(a.appointment_starts_at - a.appointment_created_at) as "Anticipación Promedio"
+FROM Appointments a;
