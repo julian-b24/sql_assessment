@@ -10,13 +10,14 @@ db = next(get_db())
 with st.sidebar:
     selected = option_menu(
         menu_title= 'Menu',
-        options=['Analytics', 'New Registers'],
+        options=['Analítica', 'Agregar Registros'],
         default_index=0
     )
 
-if selected == 'Analytics':
-    st.title('⚡️ Chats & Appointments Analytics')
-    st.markdown('Welcome to this dashboard where you can extract information easily from the chats and appointments')
+if selected == 'Analítica':
+    st.title('⚡️ Chats & Citas - Centro de Analítica')
+    st.markdown('**Bienvenido!** En este dashboard podrás extraer información de la base de datos de manera sencilla y a un solo click 📊.')
+    st.header('')
 
     # First Query  
     row_chat_reason_header = st.columns([4, 1])
@@ -29,6 +30,8 @@ if selected == 'Analytics':
     if chat_reason_btn:
         st.dataframe(get_number_appointments_by_chatreason(db))
 
+    st.divider()
+
     # Second Query    
     row_avg_time_chat_appointment = st.columns([4, 1])
     with row_avg_time_chat_appointment[0]:
@@ -38,9 +41,15 @@ if selected == 'Analytics':
         avg_time_chat_appointment_btn = st.button('Consultar', key='avg_time')
     
     if avg_time_chat_appointment_btn:
-
-        st.write('Hey')
+        row_avg_time_chat_appointment_content = st.columns([1, 3])
+        avg_time_chat_appointment = get_avg_time_chat_appointment(db)
+        with row_avg_time_chat_appointment_content[0]:
+            st.metric('Tiempo promedio', avg_time_chat_appointment)
+        
+        with row_avg_time_chat_appointment_content[1]:
+            st.markdown(f'El tiempo promedio desde que una persona crea un chat hasta que se agenda una cita es de {avg_time_chat_appointment}')
     
+    st.divider()
 
     #Third Query
     row_anticipation_appointment = st.columns([4, 1])
@@ -53,6 +62,7 @@ if selected == 'Analytics':
     if anticipation_appointmen_btn:
         st.write('Hey')
     
+    st.divider()
 
     #Fourth Query
     row_nps = st.columns([4, 1])
@@ -65,6 +75,9 @@ if selected == 'Analytics':
     if nps_btn:
         st.write('Hey')
     
+    st.divider()
+
+
     #Fifth Query
     row_hist_chats = st.columns([4, 1])
     with row_hist_chats[0]:

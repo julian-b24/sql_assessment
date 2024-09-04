@@ -8,7 +8,7 @@ class AppointmentChatReason(BaseModel):
 
 
 class AvgTimeChatAppointment(BaseModel):
-    pass
+    promedio_tiempo: list
 
 
 class AnticipationAppointment(BaseModel):

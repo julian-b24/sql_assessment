@@ -34,7 +34,18 @@ def get_number_appointments_by_chatreason(db: Session):
 
 
 def get_avg_time_chat_appointment(db: Session):
-    pass
+    avg_time_chat_appointment: AvgTimeChatAppointment = db.execute(
+        text(
+            """
+            SELECT avg(a.appointment_created_at - c.created_at) as "promedio_tiempo"
+            FROM Chats c, Appointments a
+            WHERE c.chat_id = a.chat_id AND c.patient_id = a.patient_id;
+            """
+    )).first()[0]
+
+    print(avg_time_chat_appointment)
+
+    return str(avg_time_chat_appointment)
 
 
 def get_avg_time_anticipation(db: Session):
