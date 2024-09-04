@@ -1,11 +1,12 @@
 import os
+import streamlit as st
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 
-engine = create_engine(os.getenv("DB_SOURCE"),
+engine = create_engine(st.secrets["DB_SOURCE"],
                        pool_size=15,
                        max_overflow=20,
                        pool_timeout=30,

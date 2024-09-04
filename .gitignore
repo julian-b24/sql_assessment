@@ -3,3 +3,6 @@
 
 # Cache Files
 __pycache__/
+
+# Secrets
+secrets.toml
