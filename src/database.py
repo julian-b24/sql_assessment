@@ -11,7 +11,7 @@ engine = create_engine(os.getenv("DB_SOURCE"),
                        pool_timeout=30,
                        pool_pre_ping=True)
 
-SessionLocal = sessionmaker(autoflush=False, bind=engine)
+SessionLocal = sessionmaker(engine)
 
 Base = declarative_base()
 

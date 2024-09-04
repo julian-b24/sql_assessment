@@ -2,4 +2,4 @@
 .env
 
 # Cache Files
-.py_cache
+__pycache__/
