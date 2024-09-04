@@ -10,7 +10,7 @@ The deployment of a simple visualization dashboard has been completed using Stre
 
 ## Video 🎥
 Also to ease the understanding of what has been made you can find a video of Julian Bolaños explaining the project, what was achieved, 
-some points of improvement and the ideas to iterate and keep ading more features to this project. [Video](https://sqlassessment.streamlit.app/)
+some points of improvement and the ideas to iterate and keep ading more features to this project. [Video](https://www.canva.com/design/DAGPyr_OPGs/bS-DO8c0OkbcIIyuXJtCJw/watch?utm_content=DAGPyr_OPGs&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 
 ## Setup 🛠️
 If you are interested in cloning this repository, here is a brief list of suggestions/item that you have to complete in order to run the
