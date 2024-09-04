@@ -17,7 +17,8 @@ class AnticipationAppointment(BaseModel):
 
 
 class NPS(BaseModel):
-    pass
+    intervalo: str
+    nps: int
 
 
 class HistData(BaseModel):

@@ -74,13 +74,18 @@ if selected == 'Analítica':
     #Fourth Query
     row_nps = st.columns([4, 1])
     with row_nps[0]:
-        st.subheader('No. de citas por mes y por motivo de chat')
+        st.subheader('NPS de los últimos periodos')
     
     with row_nps[1]:
         nps_btn = st.button('Consultar', key='nps')
     
     if nps_btn:
-        st.write('Hey')
+        row_nps_content = st.columns(4)
+        nps_content = get_nps(db)
+
+        for (index, col) in enumerate(row_nps_content):
+            with col:
+                st.metric(list(nps_content.keys())[index], list(nps_content.values())[index])
     
     st.divider()
 

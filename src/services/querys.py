@@ -59,8 +59,51 @@ def get_avg_time_anticipation(db: Session):
 
 
 def get_nps(db: Session):
-    pass
+    nps_ranges_dates: NPS = db.execute(
+        text(
+            """
+            WITH feedback_score_table as (
+                SELECT '30 días' as "Intervalo",
+                        count(case when c.feedback_score >= 9 then 1 end) as "Promotores",
+                        count(case when c.feedback_score = 7 OR c.feedback_score = 8 then 1 end) as "Neutral",
+                        count(case when c.feedback_score <= 6 then 1 end) as "Detractores",
+                        count(*) as "Total Puntuaciones"
+                FROM Chats c
+                WHERE c.created_at BETWEEN now() AND  now() + INTERVAL '30 DAY'
+                UNION
+                SELECT '3 mes' as "Intervalo",
+                        count(case when c.feedback_score >= 9 then 1 end) as "Promotores",
+                        count(case when c.feedback_score = 7 OR c.feedback_score = 8 then 1 end) as "Neutral",
+                        count(case when c.feedback_score <= 6 then 1 end) as "Detractores",
+                        count(*) as "Total Puntuaciones"
+                FROM Chats c
+                WHERE c.created_at BETWEEN now() AND  now() + INTERVAL '90 DAY'
+                UNION
+                SELECT '1 año' as "Intervalo",
+                        count(case when c.feedback_score >= 9 then 1 end) as "Promotores",
+                        count(case when c.feedback_score = 7 OR c.feedback_score = 8 then 1 end) as "Neutral",
+                        count(case when c.feedback_score <= 6 then 1 end) as "Detractores",
+                        count(*) as "Total Puntuaciones"
+                FROM Chats c
+                WHERE c.created_at BETWEEN now() AND  now() + INTERVAL '365 DAY'
+                UNION
+                SELECT 'Todo el tiempo' as "Intervalo",
+                        count(case when c.feedback_score >= 9 then 1 end) as "Promotores",
+                        count(case when c.feedback_score = 7 OR c.feedback_score = 8 then 1 end) as "Neutral",
+                        count(case when c.feedback_score <= 6 then 1 end) as "Detractores",
+                        count(*) as "Total Puntuaciones"
+                FROM Chats c
+            )
+            SELECT "Intervalo" as "intervalo", (100 * ("Promotores")/"Total Puntuaciones") - (100 * "Detractores"/"Total Puntuaciones") as "nps"
+            FROM feedback_score_table f;
+            """
+    )).fetchall()
 
+    formated_data = {}
+    for item in nps_ranges_dates:
+        formated_data[item.intervalo] = item.nps
+
+    return formated_data
 
 def get_hist_data(db: Session):
     pass
