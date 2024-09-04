@@ -22,4 +22,6 @@ class NPS(BaseModel):
 
 
 class HistData(BaseModel):
-    pass
+    id_paciente: int
+    freq: int
+    proporcion: int

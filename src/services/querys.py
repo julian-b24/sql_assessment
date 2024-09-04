@@ -1,4 +1,6 @@
 import pandas as pd
+import plotly.graph_objects as go
+
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import text
 
@@ -106,4 +108,28 @@ def get_nps(db: Session):
     return formated_data
 
 def get_hist_data(db: Session):
-    pass
+    hist_data: HistData = db.execute(
+        text(
+            """
+            WITH total_chats AS ( SELECT count(*) AS total FROM Chats)
+            SELECT c.patient_id as "id_paciente", count(*) as "freq", 100 * count(*)/t.total as "proporcion"
+            FROM Chats c, total_chats t
+            GROUP BY c.patient_id, t.total;
+            """
+    )).fetchall()
+
+    formated_data = {
+        'ID Paciente': [],
+        'Frecuencia': [],
+        'Proporción (%)': []
+    }
+
+    for item in hist_data:
+        formated_data['ID Paciente'].append(item.id_paciente)
+        formated_data['Frecuencia'].append(item.freq)
+        formated_data['Proporción (%)'].append(item.proporcion)
+
+    df = pd.DataFrame(formated_data)
+    df.sort_values(by='ID Paciente', inplace=True)
+    
+    return df

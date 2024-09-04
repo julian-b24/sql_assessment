@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import plotly.express as px
 from streamlit_option_menu import option_menu
 
 from database import get_db
@@ -28,7 +29,9 @@ if selected == 'Analítica':
         chat_reason_btn = st.button('Consultar', key='chat_reason')
     
     if chat_reason_btn:
-        st.dataframe(get_number_appointments_by_chatreason(db))
+        _, chat_reason_content,_ = st.columns([1,4,0.1])
+        with chat_reason_content:
+            st.dataframe(get_number_appointments_by_chatreason(db), hide_index=True)
 
     st.divider()
 
@@ -99,5 +102,25 @@ if selected == 'Analítica':
         hist_chats_btn = st.button('Graficar', key='hist_chats')
     
     if hist_chats_btn:
-        st.write('Hey')
+        row_hist_content = st.columns([3, 2])
+        hist_data = get_hist_data(db)
+
+        with row_hist_content[0]:
+            tab_freq, tab_percentage = st.tabs(['Frecuencia', 'Porcentaje'])
+            with tab_freq:
+                fig = px.bar(hist_data, y='Frecuencia', x='ID Paciente', text_auto='.2s',
+                            title="Frecuencia con la que cada paciente crea un chat")
+                fig.update_layout(height=300)
+                st.plotly_chart(fig)
+
+            with tab_percentage:
+                fig = px.bar(hist_data, y='Proporción (%)', x='ID Paciente', text_auto='.2s',
+                            title="Frecuencia con la que cada paciente crea un chat")
+                fig.update_layout(height=300)
+                st.plotly_chart(fig, use_container_width=True)
+
+        with row_hist_content[1]:
+            st.dataframe(hist_data, hide_index=True)
+        
+        
     
