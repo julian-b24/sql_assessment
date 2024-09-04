@@ -43,13 +43,19 @@ def get_avg_time_chat_appointment(db: Session):
             """
     )).first()[0]
 
-    print(avg_time_chat_appointment)
-
     return str(avg_time_chat_appointment)
 
 
 def get_avg_time_anticipation(db: Session):
-    pass
+    avg_time_chat_anticipation: AnticipationAppointment = db.execute(
+        text(
+            """
+            SELECT avg(a.appointment_starts_at - a.appointment_created_at) as "anticipacion_promedio"
+            FROM Appointments a;
+            """
+    )).first()[0]
+
+    return str(avg_time_chat_anticipation)
 
 
 def get_nps(db: Session):

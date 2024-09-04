@@ -41,7 +41,7 @@ if selected == 'Analítica':
         avg_time_chat_appointment_btn = st.button('Consultar', key='avg_time')
     
     if avg_time_chat_appointment_btn:
-        row_avg_time_chat_appointment_content = st.columns([1, 3])
+        row_avg_time_chat_appointment_content = st.columns([2, 3])
         avg_time_chat_appointment = get_avg_time_chat_appointment(db)
         with row_avg_time_chat_appointment_content[0]:
             st.metric('Tiempo promedio', avg_time_chat_appointment)
@@ -57,10 +57,17 @@ if selected == 'Analítica':
         st.subheader('Tiempo de Anticipación promedio en citas')
     
     with row_anticipation_appointment[1]:
-        anticipation_appointmen_btn = st.button('Consultar', key='anticipation_appointment')
+        anticipation_appointment_btn = st.button('Consultar', key='anticipation_appointment')
     
-    if anticipation_appointmen_btn:
-        st.write('Hey')
+    if anticipation_appointment_btn:
+        row_anticipation_appointment_content = st.columns([2, 3])
+        anticipation_appointment = get_avg_time_anticipation(db)
+        with row_anticipation_appointment_content[0]:
+            st.metric('Tiempo promedio', anticipation_appointment)
+        
+        with row_anticipation_appointment_content[1]:
+            st.markdown(f'El tiempo promedio desde que una persona agenda una cita hasta que la tiene es de **{anticipation_appointment}**.')
+    
     
     st.divider()
 

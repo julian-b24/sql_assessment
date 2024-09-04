@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import timedelta
 
 
 class AppointmentChatReason(BaseModel):
@@ -8,11 +9,11 @@ class AppointmentChatReason(BaseModel):
 
 
 class AvgTimeChatAppointment(BaseModel):
-    promedio_tiempo: list
+    promedio_tiempo: timedelta
 
 
 class AnticipationAppointment(BaseModel):
-    pass
+    anticipacion_promedio: timedelta
 
 
 class NPS(BaseModel):
