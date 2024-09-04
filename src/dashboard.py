@@ -5,13 +5,14 @@ from streamlit_option_menu import option_menu
 
 from database import get_db
 from services.querys import *
+from services.crud import *
 
 db = next(get_db())
 
 with st.sidebar:
     selected = option_menu(
         menu_title= 'Menu',
-        options=['Analítica', 'Agregar Registros'],
+        options=['Analítica'],
         default_index=0
     )
 
@@ -123,4 +124,63 @@ if selected == 'Analítica':
             st.dataframe(hist_data, hide_index=True)
         
         
+if selected == 'OCULTO':
+    st.title('Agrega nueva información de prueba')
+    st.markdown('Aquí encontrarás todos los datos de la base de datos y la posibilidad de agregar nuevos chats y citas.')
+
+    chats_tab, appointments_tab = st.tabs(['Chats', 'Appointments'])
+    with chats_tab:
+        chat_form = st.form(key='chat_form')
+        with chat_form:
+            chat_form_cols = st.columns(3)
+            with chat_form_cols[0]:
+                patient_id = st.number_input('Ingresa el ID del paciente:', min_value=1)
+            
+            with chat_form_cols[1]:
+                chat_reason = st.text_input('Ingresa el motivo:')
+
+            with chat_form_cols[2]:
+                feedback_score = st.number_input('Ingresa el feedback', min_value=0, max_value=10)
+            
+            create_new_chat = st.form_submit_button('Crear Chat')
+            if create_new_chat:
+                new_chat = NewChat({
+                    'patient_id': patient_id,
+                    'chat_reason': chat_reason,
+                    'feedback_score': feedback_score
+                })
+                res = add_new_chat(new_chat, db)
+                if res:
+                    st.toast('Nuevo chat creado', icon='✅')
+                else:
+                    st.toast('Hubo un error en la creación del chat, intenta después', icon='❌')
+
+    
+        st.dataframe(get_all_chats(db))
+    
+    with appointments_tab:
+        appointments_form = st.form(key='appointment_form')
+        with appointments_form:
+            appointments_form_cols = st.columns(3)
+            with appointments_form_cols[0]:
+                patient_id = st.number_input('Ingresa el ID del paciente:', min_value=1)
+            
+            with appointments_form_cols[1]:
+                appointment_starts_at = st.date_input('Fecha de la cita:')
+
+            with appointments_form_cols[2]:
+                chat_id = st.number_input('Ingresa el id del chat', min_value=1)
+            
+            create_appointment = st.form_submit_button('Crear Cita')
+            if create_appointment:
+                res = add_new_appointment(NewAppointment(appointment_starts_at, chat_id, patient_id), db)
+                if res:
+                    st.toast('Nueva cita creada', icon='✅')
+                else:
+                    st.toast('Hubo un error en la creación de la cita, intenta después', icon='❌')
+
+
+        
+        st.dataframe(get_all_appointments(db))
+    
     

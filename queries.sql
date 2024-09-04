@@ -20,7 +20,7 @@ WITH feedback_score_table as (
             count(case when c.feedback_score <= 6 then 1 end) as "Detractores",
             count(*) as "Total Puntuaciones"
     FROM Chats c
-    WHERE c.created_at BETWEEN now() AND  now() - INTERVAL '30 DAY'
+    WHERE c.created_at <= now() and c.created_at >= (now() - INTERVAL '30 DAY')
     UNION
     SELECT '3 mes' as "Intervalo",
             count(case when c.feedback_score >= 9 then 1 end) as "Promotores",
@@ -28,7 +28,7 @@ WITH feedback_score_table as (
             count(case when c.feedback_score <= 6 then 1 end) as "Detractores",
             count(*) as "Total Puntuaciones"
     FROM Chats c
-    WHERE c.created_at BETWEEN now() AND  now() - INTERVAL '90 DAY'
+    WHERE c.created_at <= now() and c.created_at >= (now() - INTERVAL '90 DAY')
     UNION
     SELECT '1 año' as "Intervalo",
             count(case when c.feedback_score >= 9 then 1 end) as "Promotores",
@@ -36,7 +36,7 @@ WITH feedback_score_table as (
             count(case when c.feedback_score <= 6 then 1 end) as "Detractores",
             count(*) as "Total Puntuaciones"
     FROM Chats c
-    WHERE c.created_at BETWEEN now() AND  now() - INTERVAL '365 DAY'
+    WHERE c.created_at <= now() and c.created_at >= (now() - INTERVAL '365 DAY')
     UNION
     SELECT 'Todo el tiempo' as "Intervalo",
             count(case when c.feedback_score >= 9 then 1 end) as "Promotores",
@@ -45,7 +45,12 @@ WITH feedback_score_table as (
             count(*) as "Total Puntuaciones"
     FROM Chats c
 )
-SELECT "Intervalo", (100 * ("Promotores")/"Total Puntuaciones") - (100 * "Detractores"/"Total Puntuaciones") as "NPS"
+SELECT "Intervalo",
+        CASE 
+                WHEN "Total Puntuaciones" = 0 THEN NULL 
+                ELSE (100 * "Promotores") / NULLIF("Total Puntuaciones", 0) - 
+                (100 * "Detractores") / NULLIF("Total Puntuaciones", 0)
+        END AS "NPS"
 FROM feedback_score_table f;
 
 WITH total_chats AS ( SELECT count(*) AS total FROM Chats)

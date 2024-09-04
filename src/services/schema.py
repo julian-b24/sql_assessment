@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 
 class AppointmentChatReason(BaseModel):
@@ -25,3 +25,15 @@ class HistData(BaseModel):
     id_paciente: int
     freq: int
     proporcion: int
+
+
+class NewChat(BaseModel):
+    patient_id: int
+    chat_reason: str
+    feedback_score: int
+
+
+class NewAppointment(BaseModel):
+    appointment_starts_at: datetime
+    chat_id: int
+    patient_id: int

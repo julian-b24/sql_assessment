@@ -1,31 +1,28 @@
-from sqlalchemy import Column, ForeignKey, Sequence
+from sqlalchemy import Column, ForeignKey, Sequence, CheckConstraint
 from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql.sqltypes import Integer, String, DateTime
+from sqlalchemy.orm import relationship, mapped_column, Mapped
+from sqlalchemy.sql.sqltypes import Integer, String, TIMESTAMP
 
-from src.database import engine, Base
+from database import engine, Base
 
 
 class Chats(Base):
     __tablename__ = 'Chats'
 
     chat_id = Column(Integer, Sequence('chat_id_seq'), primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=func.now())
+    created_at = Column(TIMESTAMP, nullable=False, default=func.now())
     patient_id = Column(Integer, nullable=False)
     chat_reason = Column(String(250), nullable=False)
-    feedback_score = Column(Integer, nullable=False)
-
+    feedback_score = Column(Integer, CheckConstraint('feedback_score BETWEEN 0 AND 10'))
 
 class Appointments(Base):
     __tablename__ = 'Appointments'
     
-    appointment_id = Column(Integer, Sequence('appointment_id_seq'), primary_key=True)
-    appointment_created_at = Column(DateTime, nullable=False, default=func.now())
-    appointment_starts_at = Column(DateTime, nullable=False)
-    chat_id = Column(Integer, ForeignKey(''))
+    appointment_id = Column(Integer, primary_key=True, autoincrement=True)
+    appointment_created_at = Column(TIMESTAMP, nullable=False)
+    appointment_starts_at = Column(TIMESTAMP, nullable=False)
+    chat_id = Column(Integer, nullable=False)
     patient_id = Column(Integer, nullable=False)
-
-    chat = relationship("Chats", foreign_keys=chat_id, overlaps="Chats")
-
+    
 
 Base.metadata.create_all(bind=engine)
