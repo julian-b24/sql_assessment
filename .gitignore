@@ -1,0 +1,5 @@
+# Enviroment variables
+.env
+
+# Cache Files
+.py_cache
